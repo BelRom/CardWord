@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.cardword.MainActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textInput"
+        android:ems="10"
+        android:id="@+id/textAnswer"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text=""
+        android:ems="10"
+        android:id="@+id/textInput"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:text="@string/translate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/BtnTranslate"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/textAnswer"
+        android:layout_alignParentStart="true"/>
+
+
+
+    <Button
+        android:text="@string/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/BtnTranslate"
+        android:layout_toEndOf="@+id/BtnTranslate"
+        android:id="@+id/btnSave"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinFerstLanguge"
+        android:layout_alignTop="@+id/btnSave"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/btnSave"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinSecondLanguge"
+        android:layout_below="@+id/spinFerstLanguge"
+        android:layout_toEndOf="@+id/btnSave"/>
+
+
+    <Button
+        android:text="refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnRefresh"
+        android:layout_alignBaseline="@+id/btnDelete"
+        android:layout_alignBottom="@+id/btnDelete"/>
+
+    <Button
+        android:text="Delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/BtnTranslate"
+        android:layout_toEndOf="@+id/btnRefresh"
+        android:id="@+id/btnDelete"/>
+
+    <Button
+        android:text="Update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSave"
+        android:layout_toEndOf="@+id/btnDelete"
+        android:id="@+id/btnUpdate"/>
+
+    <Button
+        android:text="Dictionary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="OpenDictionary"
+        android:id="@+id/btnDictionary"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="GameOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gameOneTextView"
+        android:layout_below="@+id/btnDelete"
+        android:layout_centerHorizontal="true"
+        android:contextClickable="true"
+        android:textSize="23sp"
+        android:clickable="true"/>
+
+</RelativeLayout>
