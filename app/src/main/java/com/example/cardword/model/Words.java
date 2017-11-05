@@ -1,14 +1,16 @@
-package com.example.cardword;
+package com.example.cardword.model;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+
 public class Words {
 
     @SerializedName("code")
     @Expose
-    private int code;
+    private Integer code;
     @SerializedName("lang")
     @Expose
     private String lang;
@@ -16,11 +18,11 @@ public class Words {
     @Expose
     private List<String> text = null;
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 

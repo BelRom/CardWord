@@ -1,66 +1,58 @@
 package com.example.cardword;
 
 import android.content.Intent;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.example.cardword.model.Word;
+import com.example.cardword.model.Words;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity  {
-//implements View.OnClickListener
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    EditText mTextInpute;
-    @BindView(R.id.textAnswer) EditText mTextTranslate;
-    Button mTranslate;
+
+    @BindView(R.id.textInput) EditText mTextInpute;
+    @BindView(R.id.textAnswer) EditText mTextTranslated;
+    @BindView(R.id.btnTranslate) Button mTranslate;
     @BindView(R.id.btnDelete) Button mBtnDelete;
     @BindView(R.id.btnDictionary) Button mBtnDictionary;
     @BindView(R.id.btnRefresh) Button mBtnRefresh;
     @BindView(R.id.btnSave) Button mBtnSave;
     @BindView(R.id.btnUpdate) Button mBtnUpdate;
-    private final String URL = "https://translate.yandex.ru";
+    @BindView(R.id.spinFerstLanguge) Spinner mFerstLanguageSpinner;
+    @BindView(R.id.spinSecondLanguge) Spinner mSecondLanguageSpinner;
+    private String mFerstLangugeCode, mSecondLangugeCode;
+    private List<String> Convert1List = new ArrayList<>();
+    static Map<String, String> mLanguageMap = new TreeMap<>();
+    private Realm realm;
+    private final String URL = "https://translate.yandex.net";
     private final String KEY =
             "trnsl.1.1.20170909T092720Z.30d670e6e7138cf8.db2be5189bbc64c2c1305c21d160b01aed2b89eb";
+    private Link mIntr;
 
 
-    Gson gson = new GsonBuilder().create();
 
-    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-    // set your desired log level
-    logging.
-    logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-    OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-    // add your other interceptors …
-
-    // add logging as last interceptor
-    httpClient.addInterceptor(logging);
-    // <-- this is the important line!
-    Retrofit retrofit = new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(URL)
-            .build();
-
-    private Link intr = retrofit.create(Link.class);
 
 
     @Override
@@ -68,81 +60,136 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mTranslate = (Button) findViewById(R.id.BtnTranslate);
-        mTextInpute = (EditText) findViewById(R.id.textInput);
+        realm = Realm.getDefaultInstance();
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
 
 
-//        mBtnDelete.setOnClickListener(this);
-//        mBtnDictionary.setOnClickListener(this);
-//        mBtnRefresh.setOnClickListener(this);
-//        mBtnSave.setOnClickListener(this);
-//        mBtnUpdate.setOnClickListener(this);
 
-//        List<Word> listword = new ArrayList<>();
-//        listword.add(new Word("word", "слово"));
-        mTranslate.setOnClickListener(new View.OnClickListener() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        mIntr = retrofit.create(Link.class);
+
+        setLanguageCod();
+        spinnerAddCod();
+        mBtnDelete.setOnClickListener(this);
+        mBtnDictionary.setOnClickListener(this);
+        mBtnRefresh.setOnClickListener(this);
+        mBtnSave.setOnClickListener(this);
+        mBtnUpdate.setOnClickListener(this);
+        mTranslate.setOnClickListener(this);
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+
+            case R.id.btnTranslate:
+                translateCall();
+                break;
+
+            case  R.id.btnDictionary:
+                Intent intent = new Intent(this, Dictionary.class);
+                startActivity(intent);
+                break;
+
+            case  R.id.btnRefresh:
+                break;
+
+            case  R.id.btnSave:
+
+                Word word = new Word();
+                word.setFirstWord(mTextInpute.getText().toString());
+                word.setSecondWord(mTextTranslated.getText().toString());
+                word.setCorrectAnswer(0);
+                realm.beginTransaction();
+                realm.insert(word);
+                realm.commitTransaction();
+
+                break;
+
+            case  R.id.btnUpdate:
+                break;
+
+        }
+    }
+
+    void translateCall(){
+        Call<Words> call = mIntr.translate(KEY, mTextInpute.getText().toString(),
+                mFerstLangugeCode +"-"+ mSecondLangugeCode);
+        call.enqueue(new Callback<Words>() {
             @Override
-            public void onClick(View v) {
+            public void onResponse(Call<Words> call, Response<Words> response) {
 
-                callback();
+                if (response.isSuccessful()) {
+                    Words word = response.body();
+                    String string = word.getText().toString();
+                    string = string.substring(1, string.length()-1);
+                    mTextTranslated.setText(string);
+                }
+            }
 
+            @Override
+            public void onFailure(Call<Words> call, Throwable t) {
 
             }
         });
 
+    }
 
-
+     void setLanguageCod(){
+        mLanguageMap.put("Azerbaijani","az");
+        mLanguageMap.put("Albanian","sq");
+        mLanguageMap.put("Русский","ru");
+        mLanguageMap.put("English","en");
     }
 
 
+    void spinnerAddCod(){
+        Convert1List.addAll(mLanguageMap.keySet());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, Convert1List);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mFerstLanguageSpinner.setAdapter(adapter);
+        mSecondLanguageSpinner.setAdapter(adapter);
 
-//    @Override
-//    public void onClick(View v) {
-//
-//        switch (v.getId()){
-//
-//            case R.id.BtnTranslate:
-//                break;
-//
-//            case  R.id.btnDictionary:
-//                Intent intent = new Intent(this, Dictionary.class);
-//                break;
-//
-//            case  R.id.btnRefresh:
-//                break;
-//
-//            case  R.id.btnSave:
-//
-//                break;
-//
-//            case  R.id.btnUpdate:
-//                break;
-//
-//        }
-//    }
+        mFerstLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mFerstLangugeCode = mLanguageMap.get(adapterView.getItemAtPosition(i).toString());
+            }
 
-    void callback(){
-        Call<Words> call = intr.translate(KEY, mTextInpute.getText().toString(), "ru-en");
-        call.enqueue(new Callback<Words>() {
-           @Override
-           public void onResponse(Call<Words> call, Response<Words> response) {
-               if(response.isSuccessful()) {
-                   mTextInpute.setText("success");
-                   Map<String, String> map = gson.fromJson(response.body().toString(), Map.class);
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-                   for (Map.Entry e : map.entrySet()) {
-                       if (e.getKey() == "test") {
-                           mTextInpute.setText(e.getValue().toString());
-                       }
-                   }
-               }
-           }
+            }
+        });
 
-           @Override
-           public void onFailure(Call<Words> call, Throwable t) {
-               mTextInpute.setText("onFailure");
-           }
-       });
+        mSecondLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mSecondLangugeCode = mLanguageMap.get(adapterView.getItemAtPosition(i).toString());
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
     }
+
+
 }
