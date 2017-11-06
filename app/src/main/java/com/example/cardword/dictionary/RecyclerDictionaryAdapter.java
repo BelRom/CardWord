@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +15,7 @@ import com.example.cardword.model.Word;
 
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -23,6 +26,7 @@ public class RecyclerDictionaryAdapter  extends RecyclerView.Adapter<RecyclerDic
 
     private static RealmResults<Word> mListWord;
     private static Context mContext;
+    private Realm mRealm;
 
 
     public RecyclerDictionaryAdapter(RealmResults<Word>  listWord, Context context) {
@@ -34,8 +38,9 @@ public class RecyclerDictionaryAdapter  extends RecyclerView.Adapter<RecyclerDic
     public RecyclerDictionaryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_row, parent, false);
-
         ViewHolder vh = new ViewHolder(v);
+
+        mRealm = Realm.getDefaultInstance();
         return vh;
     }
 
@@ -51,13 +56,28 @@ public class RecyclerDictionaryAdapter  extends RecyclerView.Adapter<RecyclerDic
         return mListWord.size();
     }
 
+    public void removeItem(int position) {
+        mRealm.beginTransaction();
+        mListWord.deleteFromRealm(position);
+        mRealm.commitTransaction();
+
+        // notify the item removed by position
+        // to perform recycler view delete animations
+        // NOTE: don't call notifyDataSetChanged()
+        notifyItemRemoved(position);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mFirstItemTextView, mSecondItemTextView;
+        public RelativeLayout  viewBackground ;
+        public LinearLayout viewForeground;
 
         public ViewHolder(View v) {
             super(v);
             mFirstItemTextView = (TextView) v.findViewById(R.id.firstItemTextView);
             mSecondItemTextView = (TextView) v.findViewById(R.id.secondItemTextView);
+            viewForeground = (LinearLayout) v.findViewById(R.id.view_foreground);
+            viewBackground = (RelativeLayout) v.findViewById(R.id.view_background);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     Toast.makeText(mContext, mListWord.get(getAdapterPosition()).getFirstWord(),
