@@ -1,4 +1,4 @@
-package com.example.cardword;
+package com.example.cardword.dictionary;
 
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;

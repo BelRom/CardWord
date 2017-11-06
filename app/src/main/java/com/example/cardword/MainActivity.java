@@ -10,15 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.cardword.dictionary.DictionaryActivity;
 import com.example.cardword.model.Word;
-import com.example.cardword.model.Words;
+import com.example.cardword.model.Translate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
 
 
     @BindView(R.id.textInput) EditText mTextInpute;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.spinSecondLanguge) Spinner mSecondLanguageSpinner;
     private String mFerstLangugeCode, mSecondLangugeCode;
     private List<String> Convert1List = new ArrayList<>();
-    static Map<String, String> mLanguageMap = new TreeMap<>();
+    static Map<String, String> mLanguageMap = new LinkedHashMap<>();
     private Realm realm;
     private final String URL = "https://translate.yandex.net";
     private final String KEY =
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case  R.id.btnDictionary:
-                Intent intent = new Intent(this, Dictionary.class);
+                Intent intent = new Intent(this, DictionaryActivity.class);
                 startActivity(intent);
                 break;
 
@@ -129,22 +130,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void translateCall(){
-        Call<Words> call = mIntr.translate(KEY, mTextInpute.getText().toString(),
+        Call<Translate> call = mIntr.translate(KEY, mTextInpute.getText().toString(),
                 mFerstLangugeCode +"-"+ mSecondLangugeCode);
-        call.enqueue(new Callback<Words>() {
+        call.enqueue(new Callback<Translate>() {
             @Override
-            public void onResponse(Call<Words> call, Response<Words> response) {
+            public void onResponse(Call<Translate> call, Response<Translate> response) {
 
                 if (response.isSuccessful()) {
-                    Words word = response.body();
-                    String string = word.getText().toString();
+                    Translate translate = response.body();
+                    String string = translate.getText().toString();
                     string = string.substring(1, string.length()-1);
                     mTextTranslated.setText(string);
                 }
             }
 
             @Override
-            public void onFailure(Call<Words> call, Throwable t) {
+            public void onFailure(Call<Translate> call, Throwable t) {
 
             }
         });
@@ -152,10 +153,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
      void setLanguageCod(){
-        mLanguageMap.put("Azerbaijani","az");
-        mLanguageMap.put("Albanian","sq");
         mLanguageMap.put("Русский","ru");
         mLanguageMap.put("English","en");
+        mLanguageMap.put("Azerbaijani","az");
+        mLanguageMap.put("Albanian","sq");
+
     }
 
 
@@ -190,6 +192,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
 
 }

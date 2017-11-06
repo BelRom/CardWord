@@ -1,6 +1,6 @@
 package com.example.cardword;
 
-import com.example.cardword.model.Words;
+import com.example.cardword.model.Translate;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,7 +13,7 @@ import retrofit2.http.Query;
 public interface Link {
 
     @GET("/api/v1.5/tr.json/translate")
-    Call<Words> translate(@Query("key") String key,
-                          @Query("text") String text,
-                          @Query("lang") String lang);
+    Call<Translate> translate(@Query("key") String key,
+                              @Query("text") String text,
+                              @Query("lang") String lang);
 }

@@ -1,31 +1,28 @@
-package com.example.cardword;
+package com.example.cardword.dictionary;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.cardword.R;
 import com.example.cardword.model.Word;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class Dictionary extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
+public class DictionaryActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
     private Realm mRealm;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerDictionaryAdapter mAdapter;
     private RealmResults<Word> mWords;
-    private LinearLayout coordinatorLayout;
+    private LinearLayout linearLayout;
 
 
     @Override
@@ -34,7 +31,7 @@ public class Dictionary extends AppCompatActivity implements RecyclerItemTouchHe
         setContentView(R.layout.activity_dictionary);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        coordinatorLayout = (LinearLayout) findViewById(R.id.activity_dictionary);
+        linearLayout = (LinearLayout) findViewById(R.id.activity_dictionary);
 
         mRealm = Realm.getDefaultInstance();
         mWords = mRealm.where(Word.class).findAll();
@@ -72,7 +69,7 @@ public class Dictionary extends AppCompatActivity implements RecyclerItemTouchHe
 
             // showing snack bar with Undo option
 //            Snackbar snackbar = Snackbar
-//                    .make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+//                    .make(linearLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
 //            snackbar.setAction("UNDO", new View.OnClickListener() {
 //                @Override
 //                public void onClick(View view) {

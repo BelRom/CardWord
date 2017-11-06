@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
 
-public class Tranclate {
+public class Translate {
 
     @SerializedName("code")
     @Expose

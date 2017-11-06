@@ -1,7 +1,6 @@
-package com.example.cardword;
+package com.example.cardword.dictionary;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cardword.R;
 import com.example.cardword.model.Word;
-
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;

@@ -5,12 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.cardword.MainActivity">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textInput"
-        android:ems="10"
-        android:id="@+id/textAnswer"/>
+
 
     <EditText
         android:layout_width="wrap_content"
@@ -20,6 +15,14 @@
         android:ems="10"
         android:id="@+id/textInput"
         android:layout_alignParentTop="true" />
+    <requestFocus />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textInput"
+        android:ems="10"
+        android:id="@+id/textAnswer" />
 
     <Button
         android:text="@string/translate"

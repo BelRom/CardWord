@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Dictionary"
+            android:name=".dictionary.DictionaryActivity"
             android:label="@string/title_activity_dictionary"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

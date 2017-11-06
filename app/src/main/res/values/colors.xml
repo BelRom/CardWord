@@ -6,4 +6,7 @@
     <color name="primary_material_light">#4caf50</color>
     <color name="primary_dark_material_light">#388e3c</color>
     <color name="accent_material_light">#f50057</color>
+    <color name="bg_row_background">#fa315b</color>
+    <color name="white">#ffffff</color>
+
 </resources>
