@@ -6,101 +6,80 @@
     tools:context="com.example.cardword.MainActivity">
 
 
-
     <EditText
+        android:layout_marginTop="50dp"
+        android:id="@+id/textInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
         android:inputType="textPersonName"
         android:text=""
-        android:ems="10"
-        android:id="@+id/textInput"
-        android:layout_alignParentTop="true" />
+        android:hint="Слово"/>
     <requestFocus />
 
     <EditText
+        android:id="@+id/textAnswer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
         android:ems="10"
-        android:id="@+id/textAnswer" />
+        android:hint="Перевод" />
 
     <Button
-        android:text="@string/translate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/btnTranslate"
-        android:layout_marginTop="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textAnswer"
         android:layout_below="@+id/textAnswer"
-        android:layout_alignParentStart="true"/>
-
+        android:layout_marginTop="16dp"
+        android:text="перевод" />
 
 
     <Button
-        android:text="@string/save"
+        android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/btnTranslate"
-        android:layout_toEndOf="@+id/btnTranslate"
-        android:id="@+id/btnSave"/>
+        android:layout_below="@+id/btnTranslate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="сохранить" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinFerstLanguge"
-        android:layout_alignTop="@+id/btnSave"
+        android:layout_alignTop="@+id/btnTranslate"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/btnSave"/>
+        android:layout_toEndOf="@+id/btnTranslate"/>
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinSecondLanguge"
         android:layout_below="@+id/spinFerstLanguge"
-        android:layout_toEndOf="@+id/btnSave"/>
+        android:layout_toEndOf="@+id/btnTranslate"/>
 
 
     <Button
-        android:text="refresh"
+        android:id="@+id/btnGameOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnRefresh"
-        android:layout_alignBaseline="@+id/btnDelete"
-        android:layout_alignBottom="@+id/btnDelete"/>
+        android:layout_below="@+id/btnDictionary"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Карточки" />
 
     <Button
-        android:text="Delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnTranslate"
-        android:layout_toEndOf="@+id/btnRefresh"
-        android:id="@+id/btnDelete"/>
-
-    <Button
-        android:text="Update"
+        android:id="@+id/btnDictionary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnSave"
-        android:layout_toEndOf="@+id/btnDelete"
-        android:id="@+id/btnUpdate"/>
-
-    <Button
-        android:text="Dictionary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="OpenDictionary"
-        android:id="@+id/btnDictionary"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:text="GameOne"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/gameOneTextView"
-        android:layout_below="@+id/btnDelete"
         android:layout_centerHorizontal="true"
-        android:contextClickable="true"
-        android:textSize="23sp"
-        android:clickable="true"/>
+        android:text="СЛоварик"
+        android:layout_marginTop="8dp"/>
 
 </RelativeLayout>

@@ -8,5 +8,7 @@
     <color name="accent_material_light">#f50057</color>
     <color name="bg_row_background">#fa315b</color>
     <color name="white">#ffffff</color>
+    <color name="bg_frame_red">#B71C1C</color>
+    <color name="bg_frame_green">#388E3C</color>
 
 </resources>

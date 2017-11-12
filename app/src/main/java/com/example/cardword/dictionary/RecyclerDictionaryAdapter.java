@@ -20,14 +20,14 @@ import io.realm.RealmResults;
  * Created by roman on 04.11.17.
  */
 
-public class RecyclerDictionaryAdapter  extends RecyclerView.Adapter<RecyclerDictionaryAdapter.ViewHolder> {
+public class RecyclerDictionaryAdapter extends RecyclerView.Adapter<RecyclerDictionaryAdapter.ViewHolder> {
 
     private static RealmResults<Word> mListWord;
     private static Context mContext;
     private Realm mRealm;
 
 
-    public RecyclerDictionaryAdapter(RealmResults<Word>  listWord, Context context) {
+    public RecyclerDictionaryAdapter(RealmResults<Word> listWord, Context context) {
         mListWord = listWord;
         mContext = context;
     }
@@ -47,6 +47,7 @@ public class RecyclerDictionaryAdapter  extends RecyclerView.Adapter<RecyclerDic
 
         holder.mFirstItemTextView.setText(mListWord.get(position).getFirstWord());
         holder.mSecondItemTextView.setText(mListWord.get(position).getSecondWord());
+        holder.mCountItemTextView.setText(String.valueOf(mListWord.get(position).getCorrectAnswer()));
     }
 
     @Override
@@ -66,25 +67,26 @@ public class RecyclerDictionaryAdapter  extends RecyclerView.Adapter<RecyclerDic
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mFirstItemTextView, mSecondItemTextView;
-        public RelativeLayout  viewBackground ;
+        public TextView mFirstItemTextView, mSecondItemTextView, mCountItemTextView;
+        public RelativeLayout viewBackground;
         public LinearLayout viewForeground;
 
         public ViewHolder(View v) {
             super(v);
             mFirstItemTextView = (TextView) v.findViewById(R.id.firstItemTextView);
             mSecondItemTextView = (TextView) v.findViewById(R.id.secondItemTextView);
+            mCountItemTextView = (TextView) v.findViewById(R.id.countItemTextView);
             viewForeground = (LinearLayout) v.findViewById(R.id.view_foreground);
             viewBackground = (RelativeLayout) v.findViewById(R.id.view_background);
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     Toast.makeText(mContext, mListWord.get(getAdapterPosition()).getFirstWord(),
                             Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
-
 
 
 }

@@ -36,11 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.textInput) EditText mTextInpute;
     @BindView(R.id.textAnswer) EditText mTextTranslated;
     @BindView(R.id.btnTranslate) Button mTranslate;
-    @BindView(R.id.btnDelete) Button mBtnDelete;
     @BindView(R.id.btnDictionary) Button mBtnDictionary;
-    @BindView(R.id.btnRefresh) Button mBtnRefresh;
+    @BindView(R.id.btnGameOne) Button mBtnGameOne;
     @BindView(R.id.btnSave) Button mBtnSave;
-    @BindView(R.id.btnUpdate) Button mBtnUpdate;
     @BindView(R.id.spinFerstLanguge) Spinner mFerstLanguageSpinner;
     @BindView(R.id.spinSecondLanguge) Spinner mSecondLanguageSpinner;
     private String mFerstLangugeCode, mSecondLangugeCode;
@@ -51,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final String KEY =
             "trnsl.1.1.20170909T092720Z.30d670e6e7138cf8.db2be5189bbc64c2c1305c21d160b01aed2b89eb";
     private Link mIntr;
+    private Cash mCash;
 
 
 
@@ -62,12 +61,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
+        mCash = Cash.getCash();
 
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
-
-
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -78,14 +76,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setLanguageCod();
         spinnerAddCod();
-        mBtnDelete.setOnClickListener(this);
         mBtnDictionary.setOnClickListener(this);
-        mBtnRefresh.setOnClickListener(this);
+        mBtnGameOne.setOnClickListener(this);
         mBtnSave.setOnClickListener(this);
-        mBtnUpdate.setOnClickListener(this);
         mTranslate.setOnClickListener(this);
-
-
     }
 
     @Override
@@ -100,7 +94,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
 
             case R.id.btnTranslate:
-                translateCall();
+                String mTranslateWord = mTextInpute.getText().toString();
+                String language = mFerstLangugeCode+"-"+mSecondLangugeCode;
+                if (mCash.hasWord(this, language, mTranslateWord)){
+                    String data = mCash.loadTranslateWord(this, language, mTranslateWord);
+                    mTextTranslated.setText(data);
+                }else{
+                    translateCall();
+                }
+
                 break;
 
             case  R.id.btnDictionary:
@@ -108,11 +110,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
 
-            case  R.id.btnRefresh:
+            case  R.id.btnGameOne:
+                Intent i = new Intent(this, GameOneActivity.class);
+                startActivity(i);
+
                 break;
 
             case  R.id.btnSave:
-
+                if(mTextInpute.getText().toString().equals("")){
+                    break;
+                }
                 Word word = new Word();
                 word.setFirstWord(mTextInpute.getText().toString());
                 word.setSecondWord(mTextTranslated.getText().toString());
@@ -123,15 +130,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
 
-            case  R.id.btnUpdate:
-                break;
-
         }
     }
 
     void translateCall(){
-        Call<Translate> call = mIntr.translate(KEY, mTextInpute.getText().toString(),
-                mFerstLangugeCode +"-"+ mSecondLangugeCode);
+        final String mTranslatedWord = mTextInpute.getText().toString();
+        final String language = mFerstLangugeCode+"-"+mSecondLangugeCode;
+        Call<Translate> call = mIntr.translate(KEY, mTranslatedWord,
+                language);
         call.enqueue(new Callback<Translate>() {
             @Override
             public void onResponse(Call<Translate> call, Response<Translate> response) {
@@ -141,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String string = translate.getText().toString();
                     string = string.substring(1, string.length()-1);
                     mTextTranslated.setText(string);
+                    mCash.save(getBaseContext(),language, mTranslatedWord, string);
                 }
             }
 
