@@ -36,19 +36,11 @@ public class GameOneActivity extends AppCompatActivity implements View.OnClickLi
     private Random random;
 
 
-    @BindView(R.id.buttonCorrect)
-    Button mBtnCorrect;
-    @BindView(R.id.buttonNext)
-    Button mBtnNext;
-    @BindView(R.id.buttonWrong)
-    Button mBtnWrong;
-    @BindView(R.id.TranslateTextView)
-    TextView mTranslateTextView;
-    @BindView(R.id.WordtextView)
-    TextView mWordTextView;
-    @BindView(R.id.textFrameLayout)
-    FrameLayout mTextFrameLayout;
-
+    @BindView(R.id.buttonCorrect) Button mBtnCorrect;
+    @BindView(R.id.buttonNext) Button mBtnNext;
+    @BindView(R.id.buttonWrong) Button mBtnWrong;
+    @BindView(R.id.TranslateTextView) TextView mTranslateTextView;
+    @BindView(R.id.WordtextView) TextView mWordTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,12 +78,14 @@ public class GameOneActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonCorrect:
-                mTextFrameLayout.setBackgroundColor(getResources().getColor(R.color.bg_frame_green));
+                mTranslateTextView.setBackgroundColor(getResources().getColor(R.color.bg_frame_green));
+                mWordTextView.setBackgroundColor(getResources().getColor(R.color.bg_frame_green));
                 mIsCorrect = true;
                 break;
 
             case R.id.buttonWrong:
-                mTextFrameLayout.setBackgroundColor(getResources().getColor(R.color.bg_frame_red));
+                mTranslateTextView.setBackgroundColor(getResources().getColor(R.color.bg_frame_red));
+                mWordTextView.setBackgroundColor(getResources().getColor(R.color.bg_frame_red));
                 mIsCorrect = false;
                 break;
 
@@ -99,6 +93,12 @@ public class GameOneActivity extends AppCompatActivity implements View.OnClickLi
                 setText();
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
 
@@ -111,11 +111,11 @@ public class GameOneActivity extends AppCompatActivity implements View.OnClickLi
             if (mIsCorrect){
 
                 realm.beginTransaction();
-//                        realm.insert(word);
                 word.setCorrectAnswer(word.getCorrectAnswer()+1);
                 realm.commitTransaction();
             }
-            mTextFrameLayout.setBackgroundColor(getResources().getColor(R.color.white));
+            mTranslateTextView.setBackgroundColor(getResources().getColor(R.color.white));
+            mWordTextView.setBackgroundColor(getResources().getColor(R.color.white));
             word = mList.get(random.nextInt(mList.size()));
             mWordTextView.setText(word.getFirstWord());
             mTranslateTextView.setText(word.getSecondWord());

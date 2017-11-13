@@ -26,6 +26,11 @@ public class RecyclerDictionaryAdapter extends RecyclerView.Adapter<RecyclerDict
     private static Context mContext;
     private Realm mRealm;
 
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        mRealm.close();
+        super.onDetachedFromRecyclerView(recyclerView);
+    }
 
     public RecyclerDictionaryAdapter(RealmResults<Word> listWord, Context context) {
         mListWord = listWord;
